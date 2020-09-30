@@ -101,9 +101,7 @@ func (p *Parser) peekTokenIs(t token.TType) bool{
 
 func (p *Parser) parserReturnStatement() *ast.ReturnStatement {
 	stmt := &ast.ReturnStatement{Token: p.curToken}
-
 	p.nextToken()
-
 	for !p.curTokenIs(token.SEMICOLON){
 		p.nextToken()
 	}

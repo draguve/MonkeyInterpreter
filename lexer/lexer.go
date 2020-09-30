@@ -40,7 +40,6 @@ func (l *Lexer) NextToken() token.Token{
 		}else{
 			tok = newToken(token.ASSIGN,l.ch)
 		}
-		tok = newToken(token.ASSIGN, l.ch)
 	case '-':
 		tok = newToken(token.MINUS, l.ch)
 	case '!':
