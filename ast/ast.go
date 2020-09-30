@@ -86,7 +86,6 @@ type ExpressionStatement struct{
 	Token token.Token
 	Expression Expression
 }
-
 func (es *ExpressionStatement) statementNode(){}
 func (es *ExpressionStatement) TokenLiteral() string{
 	return es.Token.Literal
@@ -96,4 +95,16 @@ func (es *ExpressionStatement) String() string{
 		return es.Expression.String()
 	}
 	return ""
+}
+
+type IntegerLiteral struct{
+	Token token.Token
+	Value int16
+}
+func (i *IntegerLiteral) expressionNode(){}
+func (i *IntegerLiteral) TokenLiteral() string{
+	return i.Token.Literal
+}
+func (i *IntegerLiteral) String() string{
+	return i.Token.Literal
 }
