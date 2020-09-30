@@ -3,13 +3,13 @@ package token
 type TType string
 
 var keywords = map[string]TType{
-	"fn" :  FUNCTION,
-	"let" : LET,
-	"true" : TRUE,
-	"false" : FALSE,
-	"if" : IF,
-	"else" : ELSE,
-	"return" : RETURN,
+	"fn":     FUNCTION,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
 }
 
 type Token struct {
@@ -19,21 +19,21 @@ type Token struct {
 
 const (
 	ILLEGAL = "ILLEGAL"
-	EOF = "EOF"
+	EOF     = "EOF"
 
 	IDENT = "IDENT" // names of variables or functions
-	INT = "INT" // 4,48 etc
+	INT   = "INT"   // 4,48 etc
 
 	ASSIGN = "="
-	PLUS = "+"
-	MINUS = "-"
-	BANG = "!"
-	LT = "<"
-	GT = ">"
-	EQ = "=="
+	PLUS   = "+"
+	MINUS  = "-"
+	BANG   = "!"
+	LT     = "<"
+	GT     = ">"
+	EQ     = "=="
 	NOT_EQ = "!="
 
-	COMMA = ","
+	COMMA     = ","
 	SEMICOLON = ";"
 
 	LBRACK = "("
@@ -42,17 +42,17 @@ const (
 	RBRACE = "}"
 
 	FUNCTION = "FUNCTION"
-	LET = "LET"
-	TRUE = "TRUE"
-	FALSE = "FALSE"
-	IF = "IF"
-	ELSE = "ELSE"
-	RETURN = "RETURN"
+	LET      = "LET"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	IF       = "IF"
+	ELSE     = "ELSE"
+	RETURN   = "RETURN"
 )
 
 //TokenType Returns the type of Token when ident is supplied with a string
 func WhichTokenType(ident string) TType {
-	if tok,ok := keywords[ident];ok {
+	if tok, ok := keywords[ident]; ok {
 		return tok
 	}
 	return IDENT

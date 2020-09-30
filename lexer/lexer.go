@@ -3,42 +3,42 @@ package lexer
 import "MonkeyInterpreter/token"
 
 type Lexer struct {
-	input string
-	position int
+	input        string
+	position     int
 	readPosition int
-	ch byte
+	ch           byte
 }
 
 func New(input string) *Lexer {
-	l := &Lexer{input : input}
+	l := &Lexer{input: input}
 	l.readChar()
 	return l
 }
 
 func (l *Lexer) readChar() {
 	//checks if the lexer has gone out longer than the input
-	if l.readPosition >= len(l.input){
+	if l.readPosition >= len(l.input) {
 		l.ch = 0
-	}else{
-		l.ch =  l.input[l.readPosition]
+	} else {
+		l.ch = l.input[l.readPosition]
 	}
 	l.position = l.readPosition
 	l.readPosition += 1
 }
 
-func (l *Lexer) NextToken() token.Token{
+func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
 	l.skipWhiteSpace()
 
 	switch l.ch {
 	case '=':
-		if l.peekChar() == '='{
+		if l.peekChar() == '=' {
 			ch := l.ch
 			l.readChar()
-			tok = token.Token{Type: token.EQ,Literal: string(ch)+string(ch)}
-		}else{
-			tok = newToken(token.ASSIGN,l.ch)
+			tok = token.Token{Type: token.EQ, Literal: string(ch) + string(ch)}
+		} else {
+			tok = newToken(token.ASSIGN, l.ch)
 		}
 	case '-':
 		tok = newToken(token.MINUS, l.ch)
@@ -72,16 +72,16 @@ func (l *Lexer) NextToken() token.Token{
 		tok.Literal = ""
 		tok.Type = token.EOF
 	default:
-		if isLetter(l.ch){
+		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
 			tok.Type = token.WhichTokenType(tok.Literal)
 			return tok
-		}else if isDigit(l.ch){
+		} else if isDigit(l.ch) {
 			tok.Type = token.INT
 			tok.Literal = l.readNumber()
 			return tok
-		}else{
-			tok = newToken(token.ILLEGAL,l.ch)
+		} else {
+			tok = newToken(token.ILLEGAL, l.ch)
 		}
 	}
 	l.readChar()
@@ -89,7 +89,7 @@ func (l *Lexer) NextToken() token.Token{
 }
 
 func newToken(tokenType token.TType, ch byte) token.Token {
-	return token.Token{Type: tokenType,Literal: string(ch)}
+	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
 func (l *Lexer) readIdentifier() string {
@@ -108,7 +108,7 @@ func (l *Lexer) skipWhiteSpace() {
 
 func (l *Lexer) readNumber() string {
 	startPosition := l.position
-	for isDigit(l.ch){
+	for isDigit(l.ch) {
 		l.readChar()
 	}
 	return l.input[startPosition:l.position]
@@ -118,8 +118,8 @@ func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
-func (l *Lexer) peekChar() byte{
-	if l.readPosition >= len(l.input){
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
 		return 0
 	}
 	return l.input[l.readPosition]

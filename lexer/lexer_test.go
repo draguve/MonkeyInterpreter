@@ -35,7 +35,7 @@ import (
 //	}
 //}
 
-func TestNextToken(t *testing.T){
+func TestNextToken(t *testing.T) {
 	input := `let five = 5;
 let ten = 10;
 let add = fn(x, y) {
@@ -53,7 +53,7 @@ if(5 < 10){
 10 == 10;
 10 != 9;`
 	tests := []struct {
-		expectedType token.TType
+		expectedType    token.TType
 		expectedLiteral string
 	}{
 		{token.LET, "let"},
