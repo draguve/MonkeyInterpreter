@@ -1,6 +1,11 @@
 package object
 
-import "fmt"
+import (
+	"MonkeyInterpreter/ast"
+	"bytes"
+	"fmt"
+	"strings"
+)
 
 type Type string
 
@@ -15,6 +20,7 @@ const (
 	NULL    = "NULL"
 	RETURN  = "RETURN"
 	ERROR = "ERROR"
+	FUNCTION = "FUNCTION"
 )
 
 type Integer struct {
@@ -64,3 +70,25 @@ type Error struct {
 }
 func (e *Error) Type() Type { return ERROR }
 func (e *Error) Inspect() string { return "ERROR: " + e.Message}
+
+type Function struct {
+	Arguments []*ast.Identifier
+	Body *ast.BlockStatement
+	Env *Environment
+}
+
+func (f *Function) Type() Type { return FUNCTION }
+func (f *Function) Inspect() string {
+	var out bytes.Buffer
+	var params []string
+	for _, p := range f.Arguments {
+		params = append(params, p.String())
+	}
+	out.WriteString("fn")
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(") {\n")
+	out.WriteString(f.Body.String())
+	out.WriteString("\n}")
+	return out.String()
+}

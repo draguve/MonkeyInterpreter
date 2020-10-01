@@ -51,6 +51,7 @@ func New(lex *lexer.Lexer) *Parser {
 	parser.registerPrefix(token.FALSE, parser.parseBoolean)
 	parser.registerPrefix(token.LBRACK, parser.parseGroupedExpression)
 	parser.registerPrefix(token.IF, parser.parseIfExpression)
+	parser.registerPrefix(token.FUNCTION,parser.parseFnLiteral)
 
 	parser.infixParseFns = make(map[token.TType]infixParseFn)
 	parser.registerInfix(token.PLUS, parser.parseInfixExpression)
@@ -334,6 +335,46 @@ func (p *Parser) parseCallArguments() []ast.Expression {
 		args = append(args, p.parseExpression(LOWEST))
 	}
 	if !p.expectPeek(token.RBRACK) {
+		return nil
+	}
+	return args
+}
+
+func (p *Parser) parseFnLiteral() ast.Expression {
+	lit := &ast.FunctionLiteral{Token: p.curToken}
+
+	if !p.expectPeek(token.LBRACK){
+		return nil
+	}
+	lit.Arguments = p.parseFnArguments()
+	
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	lit.Body = p.parseBlockStatement()
+	return lit
+}
+
+func (p *Parser) parseFnArguments() []*ast.Identifier {
+	var args []*ast.Identifier
+
+	if p.peekTokenIs(token.RBRACK){
+		p.nextToken()
+		return args
+	}
+	p.nextToken()
+	arg := &ast.Identifier{Token:p.curToken,Value: p.curToken.Literal}
+	args = append(args,arg)
+
+	for p.peekTokenIs(token.COMMA){
+		p.nextToken()
+		p.nextToken() // here we get the token for the variable
+		arg := &ast.Identifier{Token:p.curToken,Value: p.curToken.Literal}
+		args = append(args,arg)
+	}
+
+	if !p.expectPeek(token.RBRACK){
 		return nil
 	}
 	return args
