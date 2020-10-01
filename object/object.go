@@ -14,6 +14,7 @@ const (
 	BOOLEAN = "BOOLEAN"
 	NULL    = "NULL"
 	RETURN  = "RETURN"
+	ERROR = "ERROR"
 )
 
 type Integer struct {
@@ -57,3 +58,9 @@ func (r *ReturnValue) Type() Type {
 func (r *ReturnValue) Inspect() string {
 	return r.Value.Inspect()
 }
+
+type Error struct {
+	Message string
+}
+func (e *Error) Type() Type { return ERROR }
+func (e *Error) Inspect() string { return "ERROR: " + e.Message}
