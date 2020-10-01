@@ -347,7 +347,7 @@ func (p *Parser) parseFnLiteral() ast.Expression {
 		return nil
 	}
 	lit.Arguments = p.parseFnArguments()
-	
+
 	if !p.expectPeek(token.LBRACE) {
 		return nil
 	}
