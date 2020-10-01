@@ -3,6 +3,7 @@ package ast
 import (
 	"MonkeyInterpreter/token"
 	"bytes"
+	"strings"
 )
 
 type Node interface {
@@ -51,7 +52,17 @@ func (l *LetStatement) TokenLiteral() string {
 func (l *LetStatement) statementNode() {}
 func (l *LetStatement) String() string {
 	var out bytes.Buffer
-	out.WriteString(l.TokenLiteral() + " " + l.Name.String() + " = " + l.Value.String() + ";")
+
+	out.WriteString(l.TokenLiteral() + " ")
+	out.WriteString(l.Name.String())
+	out.WriteString("=")
+
+	if l.Value != nil {
+		out.WriteString(l.Value.String())
+	}
+
+	out.WriteString(";")
+
 	return out.String()
 }
 
@@ -154,43 +165,45 @@ func (ie *InfixExpression) String() string {
 	return out.String()
 }
 
-type Boolean struct{
+type Boolean struct {
 	Token token.Token
 	Value bool
 }
 
-func (b  *Boolean) expressionNode(){}
-func (b  *Boolean) TokenLiteral() string {
+func (b *Boolean) expressionNode() {}
+func (b *Boolean) TokenLiteral() string {
 	return b.Token.Literal
 }
-func (b  *Boolean) String() string {
+func (b *Boolean) String() string {
 	return b.Token.Literal
 }
 
 type BlockStatement struct {
-	Token token.Token
+	Token      token.Token
 	Statements []Statement
 }
-func (bs *BlockStatement) statementNode(){}
+
+func (bs *BlockStatement) statementNode() {}
 func (bs *BlockStatement) TokenLiteral() string {
 	return bs.Token.Literal
 }
 func (bs *BlockStatement) String() string {
 	var out bytes.Buffer
-	for _,s := range bs.Statements{
+	for _, s := range bs.Statements {
 		out.WriteString(s.String())
 	}
 	return out.String()
 }
 
 type IfExpression struct {
-	Token token.Token
+	Token     token.Token
 	Condition Expression
-	True *BlockStatement
-	False *BlockStatement
+	True      *BlockStatement
+	False     *BlockStatement
 }
-func (fi *IfExpression) expressionNode(){}
-func (fi *IfExpression) TokenLiteral() string{
+
+func (fi *IfExpression) expressionNode() {}
+func (fi *IfExpression) TokenLiteral() string {
 	return fi.Token.Literal
 }
 func (fi *IfExpression) String() string {
@@ -199,11 +212,32 @@ func (fi *IfExpression) String() string {
 	out.WriteString(fi.Condition.String())
 	out.WriteString(" ")
 	out.WriteString(fi.True.String())
-	if fi.False != nil{
+	if fi.False != nil {
 		out.WriteString("else ")
 		out.WriteString(fi.False.String())
 	}
 	return out.String()
 }
 
+type CallExpression struct {
+	Token     token.Token
+	Function  Expression
+	Arguments []Expression
+}
 
+func (ce *CallExpression) expressionNode() {}
+func (ce *CallExpression) TokenLiteral() string {
+	return ce.Token.Literal
+}
+func (ce *CallExpression) String() string {
+	var out bytes.Buffer
+	var args []string
+	for _, a := range ce.Arguments {
+		args = append(args, a.String())
+	}
+	out.WriteString(ce.Function.String())
+	out.WriteString("(")
+	out.WriteString(strings.Join(args, ", "))
+	out.WriteString(")")
+	return out.String()
+}
