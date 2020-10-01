@@ -9,9 +9,9 @@ import (
 
 func TestLetStatements(t *testing.T) {
 	tests := []struct {
-		input string
+		input              string
 		expectedIdentifier string
-		expectedValue interface{}
+		expectedValue      interface{}
 	}{
 		{"let x = 5;", "x", 5},
 		{"let y = true;", "y", true},
@@ -641,4 +641,3 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 		}
 	}
 }
-

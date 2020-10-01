@@ -9,13 +9,13 @@ import (
 
 func TestEvalIntegerExpression(t *testing.T) {
 	tests := []struct {
-		input string
+		input    string
 		expected int16
 	}{
 		{"5", 5},
 		{"10", 10},
-		{"-5",-5},
-		{"-10",-10},
+		{"-5", -5},
+		{"-10", -10},
 		{"5 + 5 + 5 + 5 - 10", 10},
 		{"-50 + 100 + -50", 0},
 	}
@@ -47,7 +47,7 @@ func testIntegerObject(t *testing.T, obj object.Object, expected int16) bool {
 
 func TestEvalBooleanExpression(t *testing.T) {
 	tests := []struct {
-		input string
+		input    string
 		expected bool
 	}{
 		{"true", true},
@@ -92,10 +92,10 @@ func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool {
 
 func TestBangOperator(t *testing.T) {
 	tests := []struct {
-		input string
+		input    string
 		expected bool
 	}{
-		{"!true", false},{"!false", true},
+		{"!true", false}, {"!false", true},
 		{"!5", false},
 		{"!!true", true},
 		{"!!false", false},
@@ -109,7 +109,7 @@ func TestBangOperator(t *testing.T) {
 
 func TestIfElseExpressions(t *testing.T) {
 	tests := []struct {
-		input string
+		input    string
 		expected interface{}
 	}{
 		{"if (true) { 10 }", 10},
@@ -137,4 +137,43 @@ func testNullObject(t *testing.T, obj object.Object) bool {
 		return false
 	}
 	return true
+}
+
+func TestReturnStatements(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int16
+	}{
+		{"return 10;", 10},
+		{"return 10; 9;", 10},
+		{"return 2 + 5; 9;", 7},
+		{"9; return 2 + 5; 9;", 7},
+		{
+			`
+if (10 > 1) {
+if (10 > 1) {
+return 10;
+}
+return 1;
+}
+`,
+			10},
+		{
+			`
+if (10 > 1) {
+if (10 > 1) {
+if(11>1){
+return 11;
+}
+return 10;
+}
+return 1;
+}
+`,
+			11},
+	}
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testIntegerObject(t, evaluated, tt.expected)
+	}
 }

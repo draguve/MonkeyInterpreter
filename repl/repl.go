@@ -25,13 +25,13 @@ func Start(in io.Reader, out io.Writer) {
 		p := parser.New(lex)
 
 		program := p.ParseProgram()
-		if len(p.Errors())!=0{
-			printParserErrors(out,p.Errors())
+		if len(p.Errors()) != 0 {
+			printParserErrors(out, p.Errors())
 			continue
 		}
 		eval := evaluator.Eval(program)
-		if eval!=nil{
-			_, _ = io.WriteString(out,eval.Inspect())
+		if eval != nil {
+			_, _ = io.WriteString(out, eval.Inspect())
 			_, _ = io.WriteString(out, "\n")
 		}
 	}
