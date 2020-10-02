@@ -64,8 +64,43 @@ func Eval(node ast.Node,env *object.Environment) object.Object {
 			return args[0]
 		}
 		return applyFunction(fn,args)
+	case *ast.ArrayLiteral:
+		elems := evalExpressions(node.Elements,env)
+		if len(elems) == 1 && isError(elems[0]){
+			return elems[0]
+		}
+		return &object.Array{Elements: elems}
+	case *ast.IndexExpression:
+		left := Eval(node.Left,env)
+		if isError(left){
+			return left
+		}
+		index := Eval(node.Index,env)
+		if isError(index){
+			return index
+		}
+		return evalIndexExpression(left,index)
 	}
 	return nil
+}
+
+func evalIndexExpression(left object.Object, index object.Object) object.Object {
+	switch {
+	case left.Type() == object.ARRAY && index.Type() == object.INTEGER:
+		return evalArrayIndexExpression(left,index)
+	default:
+		return newError("index operator not supported: %s", left.Type())
+	}
+}
+
+func evalArrayIndexExpression(left object.Object, index object.Object) object.Object {
+	arrayReturn := left.(*object.Array)
+	idx := index.(*object.Integer).Value
+	max := int16(len(arrayReturn.Elements)-1)
+	if idx<0 || idx>max {
+		return NULL
+	}
+	return arrayReturn.Elements[idx]
 }
 
 func applyFunction(fn object.Object, args []object.Object) object.Object {
@@ -283,12 +318,4 @@ func isError(obj object.Object) bool {
 		return obj.Type() == object.ERROR
 	}
 	return false
-}
-
-var builtins = map[string]*object.Builtin{
-	"len":&object.Builtin{
-		Fn:func (args ...object.Object) object.Object{
-			return NULL
-		},
-	},
 }

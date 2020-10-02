@@ -62,6 +62,7 @@ func New(lex *lexer.Lexer) *Parser {
 	parser.registerInfix(token.LT, parser.parseInfixExpression)
 	parser.registerInfix(token.GT, parser.parseInfixExpression)
 	parser.registerInfix(token.LBRACK, parser.parseCallExpression)
+	parser.registerInfix(token.LSQRBRACK,parser.parseIndexExpression)
 
 	return parser
 }
@@ -171,6 +172,7 @@ const (
 	SUM
 	PREFIX
 	CALL
+	INDEX
 )
 
 var precedences = map[token.TType]int{
@@ -181,6 +183,7 @@ var precedences = map[token.TType]int{
 	token.GT:     LESSGREATER,
 	token.PLUS:   SUM,
 	token.MINUS:  SUM,
+	token.LSQRBRACK: INDEX,
 }
 
 func (p *Parser) peekPrecedence() int {
@@ -409,4 +412,15 @@ func (p *Parser) parseExpressionList(end token.TType) []ast.Expression {
 		return nil
 	}
 	return list
+}
+
+func (p *Parser) parseIndexExpression(expression ast.Expression) ast.Expression {
+	exp := &ast.IndexExpression{Token: p.curToken,Left: expression}
+	p.nextToken()
+	exp.Index = p.parseExpression(LOWEST)
+
+	if !p.expectPeek(token.RSQRBRACK){
+		return nil
+	}
+	return exp
 }
