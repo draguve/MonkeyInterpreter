@@ -40,6 +40,9 @@ const (
 	RBRACK = ")"
 	LBRACE = "{"
 	RBRACE = "}"
+	LSQRBRACK = "["
+	RSQRBRACK = "]"
+
 
 	FUNCTION = "FUNCTION"
 	LET      = "LET"

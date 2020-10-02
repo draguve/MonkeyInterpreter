@@ -51,7 +51,8 @@ if(5 < 10){
 	return false;
 }
 10 == 10;
-10 != 9;`
+10 != 9;
+[1, 2];`
 	tests := []struct {
 		expectedType    token.TType
 		expectedLiteral string
@@ -126,6 +127,12 @@ if(5 < 10){
 		{token.INT, "10"},
 		{token.NOT_EQ, "!="},
 		{token.INT, "9"},
+		{token.SEMICOLON, ";"},
+		{token.LSQRBRACK, "["},
+		{token.INT, "1"},
+		{token.COMMA, ","},
+		{token.INT, "2"},
+		{token.RSQRBRACK, "]"},
 		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
