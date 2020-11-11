@@ -23,7 +23,7 @@ func TestIntegerArithmetic(t *testing.T){
 			expectedConstants: []interface{}{1,2},
 			expectedInstructions:[]code.Instructions{
 				code.Make(code.LDA,0),
-				code.Make(code.LDB,1),
+				code.Make(code.LDA,1),
 			},
 		},
 	}
