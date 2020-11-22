@@ -2,7 +2,7 @@ package token
 
 type TType string
 
-var keywords = map[string]TType{
+var  keywords = map[string]TType{
 	"fn":     FUNCTION,
 	"let":    LET,
 	"true":   TRUE,
@@ -10,6 +10,9 @@ var keywords = map[string]TType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
+	"int": INT_TYPE,
+	"bool": BOOL_TYPE,
+	"for": FOR,
 }
 
 type Token struct {
@@ -51,6 +54,9 @@ const (
 	IF       = "IF"
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
+	INT_TYPE = "INTEGER"
+	BOOL_TYPE = "BOOLEAN"
+	FOR = "FOR"
 )
 
 //TokenType Returns the type of Token when ident is supplied with a string

@@ -36,8 +36,8 @@ import (
 //}
 
 func TestNextToken(t *testing.T) {
-	input := `let five = 5;
-let ten = 10;
+	input := `let five int = 5;
+let ten bool = 10;
 let add = fn(x, y) {
 x + y;
 };
@@ -52,18 +52,21 @@ if(5 < 10){
 }
 10 == 10;
 10 != 9;
-[1, 2];`
+[1, 2];
+for`
 	tests := []struct {
 		expectedType    token.TType
 		expectedLiteral string
 	}{
 		{token.LET, "let"},
 		{token.IDENT, "five"},
+		{token.INT_TYPE,"int"},
 		{token.ASSIGN, "="},
 		{token.INT, "5"},
 		{token.SEMICOLON, ";"},
 		{token.LET, "let"},
 		{token.IDENT, "ten"},
+		{token.BOOL_TYPE,"bool"},
 		{token.ASSIGN, "="},
 		{token.INT, "10"},
 		{token.SEMICOLON, ";"},
@@ -134,6 +137,7 @@ if(5 < 10){
 		{token.INT, "2"},
 		{token.RSQRBRACK, "]"},
 		{token.SEMICOLON, ";"},
+		{token.FOR,"for"},
 		{token.EOF, ""},
 	}
 	l := New(input)
